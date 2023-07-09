@@ -2,7 +2,7 @@ FROM golang as build
 
 WORKDIR /go/src/github.com/janatjak/cmsaudit
 COPY . .
-RUN go build
+RUN CGO_ENABLED=0 go build
 
 
 FROM debian:11-slim
