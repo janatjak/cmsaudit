@@ -43,7 +43,7 @@ func main() {
 
 	r.GET("/", func(c *gin.Context) {
 		var projects []model.ProjectEntry
-		err := database.Find(&projects).Error
+		err := database.Order("name").Find(&projects).Error
 		if err != nil {
 			panic(err)
 		}
