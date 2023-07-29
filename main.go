@@ -18,6 +18,7 @@ type ProjectDto struct {
 	Name      string
 	GitlabUrl string
 	WebUrl    string
+	Server    string
 	Php       string
 	Symfony   string
 	Cms       string
@@ -62,6 +63,7 @@ func main() {
 						Name:      project.Name,
 						GitlabUrl: project.GitlabUrl,
 						WebUrl:    project.WebUrl,
+						Server:    "?",
 						Php:       "?",
 						Symfony:   "?",
 						Cms:       "?",
@@ -71,6 +73,7 @@ func main() {
 						Name:      project.Name,
 						GitlabUrl: project.GitlabUrl,
 						WebUrl:    project.WebUrl,
+						Server:    result.Server,
 						Php:       result.Php,
 						Symfony:   result.Packages[0].Versions["symfony/framework-bundle"].Version,
 						Cms:       result.Packages[0].Versions["uxf/cms"].Version,

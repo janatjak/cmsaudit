@@ -12,6 +12,7 @@ type Checker struct {
 }
 
 type Audit struct {
+	Server   string
 	Php      string     `json:"php"`
 	Packages []Packages `json:"packages"`
 }
@@ -37,6 +38,9 @@ func (c *Checker) Check(url string) (*Audit, error) {
 
 	var result Audit
 	json.NewDecoder(response.Body).Decode(&result)
+
+	result.Server = response.Header.Get("server")
+
 	return &result, nil
 }
 
