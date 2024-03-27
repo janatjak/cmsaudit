@@ -1,4 +1,4 @@
-package checker
+package nodechecker
 
 import (
 	"encoding/json"
@@ -12,17 +12,15 @@ type Checker struct {
 }
 
 type Audit struct {
-	Server   string
-	Php      string     `json:"php"`
-	Packages []Packages `json:"packages"`
-}
-
-type Packages struct {
-	Versions map[string]Package `json:"versions"`
+	Node     string             `json:"node"`
+	Next     string             `json:"next"`
+	Packages map[string]Package `json:"packages"`
 }
 
 type Package struct {
+	Name    string `json:"name"`
 	Version string `json:"version"`
+	IsError string `json:"isError"`
 }
 
 func (c *Checker) Check(url string) (*Audit, error) {
@@ -38,8 +36,6 @@ func (c *Checker) Check(url string) (*Audit, error) {
 
 	var result Audit
 	json.NewDecoder(response.Body).Decode(&result)
-
-	result.Server = response.Header.Get("server")
 
 	return &result, nil
 }

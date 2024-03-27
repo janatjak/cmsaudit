@@ -7,16 +7,25 @@
 </head>
 <body>
 
-<div class="container" style="margin-top: 50px">
+<div class="container-fluid" style="margin-top: 50px">
     <table class="table">
         <tr>
             <th>Name</th>
             <th>Gitlab URL</th>
             <th>Web URL</th>
             <th>Server</th>
+            <!-- api -->
             <th>PHP</th>
             <th>Symfony</th>
             <th>CMS</th>
+            <!-- web -->
+            <th>Web Node</th>
+            <th>Web NextJS</th>
+            <th>Web UI</th>
+            <!-- admin -->
+            <th>Admin Node</th>
+            <th>Admin NextJS</th>
+            <th>Admin UI</th>
         </tr>
         {{ range .projects }}
         <tr>
@@ -24,9 +33,18 @@
             <td><a href="{{ .GitlabUrl }}" target="_blank">{{ .GitlabUrl }}</a></td>
             <td><a href="{{ .WebUrl }}" target="_blank">{{ .WebUrl }}</a></td>
             <td>{{ .Server }}</td>
-            <td>{{ .Php }}</td>
-            <td>{{ .Symfony }}</td>
-            <td>{{ .Cms }}</td>
+            <!-- api -->
+            <td>{{ .ApiPhp }}</td>
+            <td>{{ .ApiSymfony }}</td>
+            <td>{{ .ApiCms }}</td>
+            <!-- web -->
+            <td>{{ .WebNode }}</td>
+            <td>{{ .WebNextJS }}</td>
+            <td>{{ .WebUI }}</td>
+            <!-- admin -->
+            <td>{{ .AdminNode }}</td>
+            <td>{{ .AdminNextJS }}</td>
+            <td>{{ .AdminUI }}</td>
         </tr>
         {{ end }}
     </table>

@@ -11,6 +11,8 @@ services:
         image: janatjak/cmsaudit
         environment:
             TOKEN: xxx
+            AUTH_USER: XXX
+            AUTH_PASSWORD: XXX
             DATABASE_DSN: 'host=127.0.0.1 user=root password=pass dbname=audit sslmode=disable'
 ```
 
