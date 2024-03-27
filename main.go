@@ -16,23 +16,18 @@ import (
 	"time"
 )
 
+type Template struct {
+	Projects    []ProjectDto
+	WebPackages []string
+}
+
 type ProjectDto struct {
 	Name      string
 	GitlabUrl string
 	WebUrl    string
-	Server    string
-	// API
-	ApiPhp     string
-	ApiSymfony string
-	ApiCms     string
-	// Node
-	WebNode   string
-	WebNextJS string
-	WebUI     string
-	//
-	AdminNode   string
-	AdminNextJS string
-	AdminUI     string
+	Api       *apichecker.Audit
+	Web       *nodechecker.Audit
+	Admin     *nodechecker.Audit
 }
 
 //go:embed templates/*
@@ -50,7 +45,7 @@ func main() {
 	token := os.Getenv("TOKEN")
 
 	r := gin.Default()
-	templ := template.Must(template.New("").ParseFS(f, "templates/*.html"))
+	templ := template.Must(template.New("").ParseFS(f, "templates/*.gohtml"))
 	r.SetHTMLTemplate(templ)
 
 	apiCheckerClient := apichecker.New(time.Second * 10)
@@ -81,49 +76,13 @@ func main() {
 				resultNodeWeb, _ := nodeCheckerClient.Check(baseUrl + "/uxf-audit.json")
 				resultNodeAdmin, _ := nodeCheckerClient.Check(baseUrl + "/admin/uxf-audit.json")
 
-				server := "?"
-				apiPhp := "?"
-				apiSymfony := "?"
-				apiCms := "?"
-				if resultApi != nil {
-					server = resultApi.Server
-					apiPhp = resultApi.Php
-					apiSymfony = resultApi.Packages[0].Versions["symfony/framework-bundle"].Version
-					apiCms = resultApi.Packages[0].Versions["uxf/cms"].Version
-				}
-
-				webNode := "?"
-				webNextJS := "?"
-				webUI := "?"
-				if resultNodeWeb != nil {
-					webNode = resultNodeWeb.Node
-					webNextJS = resultNodeWeb.Next
-					webUI = resultNodeWeb.Packages["@uxf/ui"].Version
-				}
-
-				adminNode := "?"
-				adminNextJS := "?"
-				adminUI := "?"
-				if resultNodeAdmin != nil {
-					adminNode = resultNodeAdmin.Node
-					adminNextJS = resultNodeAdmin.Next
-					adminUI = resultNodeAdmin.Packages["@uxf/ui"].Version
-				}
-
 				projectDtos[index] = ProjectDto{
-					Name:        project.Name,
-					GitlabUrl:   project.GitlabUrl,
-					WebUrl:      project.WebUrl,
-					Server:      server,
-					ApiPhp:      apiPhp,
-					ApiSymfony:  apiSymfony,
-					ApiCms:      apiCms,
-					WebNode:     webNode,
-					WebNextJS:   webNextJS,
-					WebUI:       webUI,
-					AdminNode:   adminNode,
-					AdminNextJS: adminNextJS,
-					AdminUI:     adminUI,
+					Name:      project.Name,
+					GitlabUrl: project.GitlabUrl,
+					WebUrl:    project.WebUrl,
+					Api:       resultApi,
+					Web:       resultNodeWeb,
+					Admin:     resultNodeAdmin,
 				}
 
 				wg.Done()
@@ -131,8 +90,23 @@ func main() {
 		}
 		wg.Wait()
 
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"projects": projectDtos,
+		c.HTML(http.StatusOK, "index.gohtml", Template{
+			Projects: projectDtos,
+			WebPackages: []string{
+				"@uxf/analytics",
+				"@uxf/core",
+				"@uxf/datepicker",
+				"@uxf/form",
+				"@uxf/localize",
+				"@uxf/router",
+				"@uxf/styles",
+				"@uxf/translations",
+				"@uxf/wysiwyg",
+				"@uxf/eslint-config",
+				"@uxf/icons-generator",
+				"@uxf/resizer",
+				"@uxf/scripts",
+			},
 		})
 	})
 
