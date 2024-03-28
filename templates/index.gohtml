@@ -5,25 +5,37 @@
     <title>UXF Audit</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        * {
+            font-family: Monospaced, monospace;
+        }
+        html {
+            background-color: #212529;
+        }
         .hidden {
             display: none;
+        }
+        th:first-child, td:first-child
+        {
+            position: sticky;
+            left: 0;
         }
     </style>
     {{- /* gotype: github.com/janatjak/cmsaudit.Template*/ -}}
 </head>
 <body>
 
-<div class="container-fluid" style="margin-top: 50px">
-    <table class="table table-bordered">
+<div>
+    <table class="table table-bordered table-striped table-dark">
         <tr class="text-center">
-            <th colspan="3">
+            <th>
                 <button
-                    onclick="document.querySelectorAll('.js-full').forEach(e => e.classList.toggle('hidden'))"
-                    class="btn btn-outline-primary btn-sm"
+                        onclick="document.querySelectorAll('.js-full').forEach(e => e.classList.toggle('hidden'))"
+                        class="btn btn-outline-primary btn-sm"
                 >
                     full
                 </button>
             </th>
+            <th colspan="2"></th>
             <th></th>
             <th colspan="3">API</th>
             <th colspan="3">Web</th>
@@ -113,7 +125,10 @@
                     <td>{{ (index .Web.Packages "@uxf/ui").Version }}</td>
                     {{ $packages := .Web.Packages }}
                     {{ range $item := $webPackages }}
-                        <td class="js-full hidden">{{ (index $packages $item).Version }}</td>
+                        {{ $p := index $packages $item }}
+                        <td class="js-full hidden {{ if $p.IsError }}text-danger{{ end }}">
+                            {{ $p.Version }}
+                        </td>
                     {{ end }}
                 {{ else }}
                     <td>?</td>
@@ -129,7 +144,10 @@
                     <td>{{ (index .Admin.Packages "@uxf/ui").Version }}</td>
                     {{ $packages := .Admin.Packages }}
                     {{ range $item := $webPackages }}
-                        <td class="js-full hidden">{{ (index $packages $item).Version }}</td>
+                        {{ $p := index $packages $item }}
+                        <td class="js-full hidden {{ if $p.IsError }}text-danger{{ end }}">
+                            {{ $p.Version }}
+                        </td>
                     {{ end }}
                 {{ else }}
                     <td>?</td>
