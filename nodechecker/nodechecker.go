@@ -14,6 +14,8 @@ type Checker struct {
 type Audit struct {
 	Node     string             `json:"node"`
 	Next     string             `json:"next"`
+	React    string             `json:"react"`
+	ReactDom string             `json:"react-dom"`
 	Packages map[string]Package `json:"packages"`
 }
 

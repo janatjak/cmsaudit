@@ -31,7 +31,12 @@ func (c *Checker) Check(url string) (*Audit, error) {
 		return nil, err
 	}
 	if response.StatusCode != 200 {
-		return nil, errors.New("client error")
+		return &Audit{
+			Server: response.Header.Get("server"),
+			Packages: []Packages{
+				{Versions: map[string]Package{}},
+			},
+		}, errors.New("client error")
 	}
 
 	defer response.Body.Close()
