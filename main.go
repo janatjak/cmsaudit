@@ -95,6 +95,7 @@ func main() {
 			WebPackages: []string{
 				"@uxf/analytics",
 				"@uxf/core",
+				"@uxf/data-grid",
 				"@uxf/datepicker",
 				"@uxf/form",
 				"@uxf/localize",
