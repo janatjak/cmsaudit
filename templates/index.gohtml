@@ -47,6 +47,7 @@
             <th>Name</th>
             <th>Gitlab URL</th>
             <th>Web URL</th>
+            <th>Coverage</th>
             <th>
                 Server<br>
                 <img src="https://img.shields.io/github/v/tag/nginx/nginx" style="height:16px">
@@ -126,6 +127,7 @@
                 <td>{{ .Name }}</td>
                 <td><a href="{{ .GitlabUrl }}" target="_blank">link</a></td>
                 <td><a href="{{ .WebUrl }}" target="_blank">{{ .WebUrl }}</a></td>
+                <td><img src="{{ .GitlabUrl }}/badges/{{ .Branch }}/coverage.svg" /></td>
                 {{ if .Api }}
                     {{ $packages := (index .Api.Packages 0).Versions }}
                     <td>{{ .Api.Server }}</td>

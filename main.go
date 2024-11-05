@@ -25,6 +25,7 @@ type ProjectDto struct {
 	Name      string
 	GitlabUrl string
 	WebUrl    string
+	Branch    string
 	Api       *apichecker.Audit
 	Web       *nodechecker.Audit
 	Admin     *nodechecker.Audit
@@ -80,6 +81,7 @@ func main() {
 					Name:      project.Name,
 					GitlabUrl: project.GitlabUrl,
 					WebUrl:    project.WebUrl,
+					Branch:    project.Branch,
 					Api:       resultApi,
 					Web:       resultNodeWeb,
 					Admin:     resultNodeAdmin,

@@ -7,4 +7,5 @@ type ProjectEntry struct {
 	Name      string `gorm:"size:255;not null;"`
 	GitlabUrl string `gorm:"size:255;not null;"`
 	WebUrl    string `gorm:"size:255;not null;"`
+	Branch    string `gorm:"size:255;not null;default:develop"`
 }
