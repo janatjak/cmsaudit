@@ -38,14 +38,13 @@
             <th colspan="2"></th>
             <th></th>
             <th colspan="3">API</th>
-            <th colspan="5">Web</th>
+            <th colspan="6">Web</th>
             <th colspan="{{ len .WebPackages }}" class="js-full hidden"></th>
-            <th colspan="5">Admin</th>
+            <th colspan="6">Admin</th>
             <th colspan="{{ len .WebPackages }}" class="js-full hidden"></th>
         </tr>
         <tr>
             <th>Name</th>
-            <th>Gitlab URL</th>
             <th>Web URL</th>
             <th>Coverage</th>
             <th>
@@ -69,6 +68,10 @@
             <th>
                 Node<br>
                 <img src="https://img.shields.io/github/v/tag/nodejs/node" style="height:16px">
+            </th>
+            <th>
+                Yarn<br>
+                <img src="https://img.shields.io/github/v/release/yarnpkg/berry?display_name=release" style="height:16px">
             </th>
             <th>
                 NextJS<br>
@@ -98,6 +101,10 @@
                 <img src="https://img.shields.io/github/v/tag/nodejs/node" style="height:16px">
             </th>
             <th>
+                Yarn<br>
+                <img src="https://img.shields.io/github/v/release/yarnpkg/berry?display_name=release" style="height:16px">
+            </th>
+            <th>
                 NextJS<br>
                 <img src="https://img.shields.io/npm/v/next" style="height:16px">
             </th>
@@ -125,9 +132,14 @@
         {{ range .Projects }}
             <tr>
                 <td>{{ .Name }}</td>
-                <td><a href="{{ .GitlabUrl }}" target="_blank">link</a></td>
                 <td><a href="{{ .WebUrl }}" target="_blank">{{ .WebUrl }}</a></td>
-                <td><img src="{{ .GitlabUrl }}/badges/{{ .Branch }}/coverage.svg" /></td>
+                <td>
+                    <a href="{{ .GitlabUrl }}" target="_blank">
+                        <object data="https://gitlab.com/uxf/fan/badges/main/coverage.svg" type="image/svg+xml" width="120" height="20">
+                            <img src="{{ .GitlabUrl }}/badges/{{ .Branch }}/coverage.svg" alt="link" />
+                        </object>
+                    </a>
+                </td>
                 {{ if .Api }}
                     {{ $packages := (index .Api.Packages 0).Versions }}
                     <td>{{ .Api.Server }}</td>
@@ -142,6 +154,7 @@
                 {{ end }}
                 {{ if .Web }}
                     <td>{{ .Web.Node }}</td>
+                    <td>{{ .Web.Yarn }}</td>
                     <td>{{ .Web.Next }}</td>
                     <td>{{ .Web.React }}</td>
                     <td>{{ .Web.ReactDom }}</td>
@@ -159,12 +172,14 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                     {{ range $item := $webPackages }}
                         <td class="js-full hidden"></td>
                     {{ end }}
                 {{ end }}
                 {{ if .Admin }}
                     <td>{{ .Admin.Node }}</td>
+                    <td>{{ .Admin.Yarn }}</td>
                     <td>{{ .Admin.Next }}</td>
                     <td>{{ .Admin.React }}</td>
                     <td>{{ .Admin.ReactDom }}</td>
@@ -177,6 +192,7 @@
                         </td>
                     {{ end }}
                 {{ else }}
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

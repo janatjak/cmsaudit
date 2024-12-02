@@ -13,6 +13,7 @@ type Checker struct {
 
 type Audit struct {
 	Node     string             `json:"node"`
+	Yarn     string             `json:"yarn"`
 	Next     string             `json:"next"`
 	React    string             `json:"react"`
 	ReactDom string             `json:"react-dom"`
