@@ -37,7 +37,7 @@
             </th>
             <th colspan="2"></th>
             <th></th>
-            <th colspan="3">API</th>
+            <th colspan="4">API</th>
             <th colspan="6">Web</th>
             <th colspan="{{ len .WebPackages }}" class="js-full hidden"></th>
             <th colspan="6">Admin</th>
@@ -63,6 +63,10 @@
             <th>
                 CMS<br>
                 <img src="https://img.shields.io/packagist/v/uxf/cms" style="height:16px">
+            </th>
+            <th>
+                ORM<br>
+                <img src="https://img.shields.io/packagist/v/doctrine/orm" style="height:16px">
             </th>
             <!-- web -->
             <th>
@@ -146,7 +150,9 @@
                     <td>{{ .Api.Php }}</td>
                     <td>{{ (index $packages "symfony/framework-bundle").Version }}</td>
                     <td>{{ (index $packages "uxf/cms").Version }}</td>
+                    <td>{{ (index $packages "doctrine/orm").Version }}</td>
                 {{ else }}
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
