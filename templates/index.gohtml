@@ -26,7 +26,8 @@
 
 <div>
     <table class="table table-bordered table-striped table-dark">
-        <tr class="text-center">
+        <thead class="position-sticky top-0 z-1">
+        <tr>
             <th>
                 <button
                         onclick="document.querySelectorAll('.js-full').forEach(e => e.classList.toggle('hidden'))"
@@ -95,8 +96,8 @@
             </th>
             {{ range $item := .WebPackages }}
                 <th class="js-full hidden">
-                    <span style="font-size: 10px">{{ $item }}</span><br>
-                    <img src="https://img.shields.io/npm/v/{{ $item }}" style="height:16px">
+                    <span style="font-size: 10px">{{ $item.Name }}</span><br>
+                    <img src="https://img.shields.io/npm/v/{{ $item.Name }}" style="height:16px">
                 </th>
             {{ end }}
             <!-- admin -->
@@ -126,12 +127,14 @@
             </th>
             {{ range $item := .WebPackages }}
                 <th class="js-full hidden">
-                    <span style="font-size: 10px">{{ $item }}</span><br>
-                    <img src="https://img.shields.io/npm/v/{{ $item }}" style="height:16px">
+                    <span style="font-size: 10px">{{ $item.Name }}</span><br>
+                    <img src="https://img.shields.io/npm/v/{{ $item.Name }}" style="height:16px">
                 </th>
             {{ end }}
         </tr>
+        </thead>
 
+        <tbody>
         {{ $webPackages := .WebPackages }}
         {{ range .Projects }}
             <tr>
@@ -167,8 +170,10 @@
                     <td>{{ (index .Web.Packages "@uxf/ui").Version }}</td>
                     {{ $packages := .Web.Packages }}
                     {{ range $item := $webPackages }}
-                        {{ $p := index $packages $item }}
-                        <td class="js-full hidden {{ if $p.IsError }}text-danger{{ end }}">
+                        {{ $p := index $packages $item.Name }}
+                        {{ $latestVersion := (index $webPackages $item.Name).LatestVersion }}
+                        {{ $isNotLatest := ne $p.Version $latestVersion }}
+                        <td class="js-full hidden {{ if $p.IsError }}text-danger{{ end }} {{ if $isNotLatest }}text-warning{{ end }}">
                             {{ $p.Version }}
                         </td>
                     {{ end }}
@@ -192,8 +197,10 @@
                     <td>{{ (index .Admin.Packages "@uxf/ui").Version }}</td>
                     {{ $packages := .Admin.Packages }}
                     {{ range $item := $webPackages }}
-                        {{ $p := index $packages $item }}
-                        <td class="js-full hidden {{ if $p.IsError }}text-danger{{ end }}">
+                        {{ $p := index $packages $item.Name }}
+                        {{ $latestVersion := (index $webPackages $item.Name).LatestVersion }}
+                        {{ $isNotLatest := ne $p.Version $latestVersion }}
+                        <td class="js-full hidden {{ if $p.IsError }}text-danger{{ end }} {{ if $isNotLatest }}text-warning{{ end }}">
                             {{ $p.Version }}
                         </td>
                     {{ end }}
@@ -210,6 +217,7 @@
                 {{ end }}
             </tr>
         {{ end }}
+        </tbody>
     </table>
 </div>
 

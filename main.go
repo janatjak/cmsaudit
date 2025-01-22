@@ -6,6 +6,7 @@ import (
 	"github.com/janatjak/cmsaudit/apichecker"
 	"github.com/janatjak/cmsaudit/model"
 	"github.com/janatjak/cmsaudit/nodechecker"
+	"github.com/janatjak/cmsaudit/npmchecker"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"html/template"
@@ -18,7 +19,7 @@ import (
 
 type Template struct {
 	Projects    []ProjectDto
-	WebPackages []string
+	WebPackages map[string]WebPackage
 }
 
 type ProjectDto struct {
@@ -29,6 +30,11 @@ type ProjectDto struct {
 	Api       *apichecker.Audit
 	Web       *nodechecker.Audit
 	Admin     *nodechecker.Audit
+}
+
+type WebPackage struct {
+	Name          string
+	LatestVersion string
 }
 
 //go:embed templates/*
@@ -51,6 +57,7 @@ func main() {
 
 	apiCheckerClient := apichecker.New(time.Second * 10)
 	nodeCheckerClient := nodechecker.New(time.Second * 10)
+	npmCheckerClient := npmchecker.New(time.Second * 10)
 
 	r.GET("/", func(c *gin.Context) {
 		var projects []model.ProjectEntry
@@ -90,26 +97,53 @@ func main() {
 				wg.Done()
 			}(index)
 		}
+
+		packages := []string{
+			"@uxf/analytics",
+			"@uxf/core",
+			"@uxf/core-react",
+			"@uxf/data-grid",
+			"@uxf/datepicker",
+			"@uxf/form",
+			"@uxf/localize",
+			"@uxf/router",
+			"@uxf/styles",
+			"@uxf/translations",
+			"@uxf/wysiwyg",
+			"@uxf/eslint-config",
+			"@uxf/icons-generator",
+			"@uxf/resizer",
+			"@uxf/scripts",
+		}
+
+		wg.Add(len(packages))
+
+		webPackagesSync := sync.Map{}
+
+		for index := range packages {
+			go func(index int) {
+				packageName := packages[index]
+				resultNpm, _ := npmCheckerClient.Check(packageName)
+
+				webPackagesSync.Store(packageName, WebPackage{
+					Name:          packageName,
+					LatestVersion: resultNpm.Dist.LatestVersion,
+				})
+
+				wg.Done()
+			}(index)
+		}
 		wg.Wait()
 
+		webPackages := make(map[string]WebPackage)
+		webPackagesSync.Range(func(k interface{}, v interface{}) bool {
+			webPackages[k.(string)] = v.(WebPackage)
+			return true
+		})
+
 		c.HTML(http.StatusOK, "index.gohtml", Template{
-			Projects: projectDtos,
-			WebPackages: []string{
-				"@uxf/analytics",
-				"@uxf/core",
-				"@uxf/data-grid",
-				"@uxf/datepicker",
-				"@uxf/form",
-				"@uxf/localize",
-				"@uxf/router",
-				"@uxf/styles",
-				"@uxf/translations",
-				"@uxf/wysiwyg",
-				"@uxf/eslint-config",
-				"@uxf/icons-generator",
-				"@uxf/resizer",
-				"@uxf/scripts",
-			},
+			Projects:    projectDtos,
+			WebPackages: webPackages,
 		})
 	})
 
